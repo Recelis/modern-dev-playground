@@ -12,15 +12,6 @@ export class TodoList extends LitElement {
       gap: 1rem;
       margin-block-start: 1rem;
     }
-    .todo {
-      border: solid 1px gray;
-      border-radius: 5px;
-      height: 30px;
-      width: 300px;
-    }
-    .todo .done {
-      text-decoration: "line-through";
-    }
   `;
 
   @property({ type: Array }) todoList: Todo[] = [];
@@ -30,9 +21,7 @@ export class TodoList extends LitElement {
     return html`<div class="todo-list">
       ${this.todoList.map(
         (todo) =>
-          html`<div class=${classMap({ todo: true, done: todo.done })}>
-            ${todo.text}
-          </div>`
+          html`<todo-listitem .todo=${todo}></todo-listitem>`
       )}
     </div>`;
   }

@@ -1,6 +1,7 @@
 import { LitElement, css, html, type CSSResultGroup } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import type { Todo } from "./types";
+import type { RemoveTodo, Todo } from "./types";
+import { v4 as uuidv4 } from "uuid";
 
 @customElement("lit-index")
 export class LitIndex extends LitElement {
@@ -20,16 +21,36 @@ export class LitIndex extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener("addTodo", this._addTodo);
+    window.addEventListener("updateTodo", (e: Event) => {
+      const customEvent = e as CustomEvent<Todo>;
+      this._updateTodo(customEvent.detail);
+    });
+    window.addEventListener("removeTodo", (e: Event) => {
+      const customEvent = e as CustomEvent<RemoveTodo>;
+      this._removeTodo(customEvent.detail);
+    });
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("addTodo", this._addTodo);
+    window.removeEventListener("updateTodo", (e: Event) => {
+      const customEvent = e as CustomEvent<Todo>;
+      this._updateTodo(customEvent.detail);
+    });
   }
 
   private _addTodo = () => {
     console.log("todo button pressed");
-    const latestTodo = this._todos[this._todos.length - 1];
-    if (latestTodo === undefined || latestTodo.text !== "") {
-      // Lit is reactive to the property value changing, mutating objects or arrays in place does not trigger a rerender
-      this._todos = [...this._todos, { text: "", done: false }];
-    }
+      this._todos = [...this._todos, { id: uuidv4(), text: "", done: false }];
   };
+
+  private _updateTodo = (updateTodo: Todo) => {
+    this._todos = this._todos.map(todo => todo.id === updateTodo.id ? updateTodo : todo);
+  };
+
+  private _removeTodo = (removeTodo: RemoveTodo) => {
+    this._todos = this._todos.filter(todo => todo.id !== removeTodo.id);
+  }
 
   render() {
     return html`<div class="todo-app">
