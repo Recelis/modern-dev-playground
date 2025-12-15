@@ -1,7 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import type { Todo } from "./types";
-import { classMap } from "lit/directives/class-map.js";
 
 @customElement("todo-list")
 export class TodoList extends LitElement {

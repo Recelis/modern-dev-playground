@@ -19,7 +19,7 @@ export class TodoListItem extends LitElement {
     
 
     .todo-listitem .done {
-      text-decoration: "line-through";
+      text-decoration: line-through;
     }   
     .todo-listitem .item-container {
         display: flex;
