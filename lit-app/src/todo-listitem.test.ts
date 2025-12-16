@@ -1,4 +1,4 @@
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture, fixtureCleanup } from '@open-wc/testing';
 import { html } from 'lit';
 
 
@@ -6,6 +6,10 @@ import { TodoListItem } from './todo-listitem';
 import type { Todo } from './types';
 
 describe('TodoListItem', () => {
+  beforeEach(() => {
+    fixtureCleanup();
+  });
+
   it('renders todo text', async () => {
     const todo: Todo = { id: '1', text: 'Test todo', done: false };
     expect(todo).to.exist;
@@ -19,16 +23,19 @@ describe('TodoListItem', () => {
     expect(item?.textContent?.trim()).to.contains('Test todo');
   });
 
-  // it('shows done class when todo is done', async () => {
-  //   const todo: Todo = { id: '1', text: 'Done todo', done: true };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('shows done class when todo is done', async () => {
+    const todo: Todo = { id: '1', text: 'Done todo', done: true };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   const item = el.shadowRoot?.querySelector('.item');
-  //   expect(item?.classList.contains('done')).to.be.true;
-  // });
+    const container = el.shadowRoot?.querySelector('.todo-listitem');
+    expect(container).to.exist;
+    const item = container?.querySelector('.item');
+    expect(item).to.exist;
+    expect(item?.classList.contains('done')).to.be.true;
+  });
 
   // it('enters edit mode when item is clicked', async () => {
   //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
