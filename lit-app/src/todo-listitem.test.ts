@@ -3,7 +3,7 @@ import { html } from 'lit';
 
 
 import { TodoListItem } from './todo-listitem';
-import type { Todo } from './types';
+import type { RemoveTodo, Todo } from './types';
 
 describe('TodoListItem', () => {
   beforeEach(() => {
@@ -37,109 +37,109 @@ describe('TodoListItem', () => {
     expect(item?.classList.contains('done')).to.be.true;
   });
 
-  // it('enters edit mode when item is clicked', async () => {
-  //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('enters edit mode when item is clicked', async () => {
+    const todo: Todo = { id: '1', text: 'Test todo', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   const item = el.shadowRoot?.querySelector('.item') as HTMLElement;
-  //   item?.click();
+    const item = el.shadowRoot?.querySelector('.item') as HTMLElement;
+    item?.click();
 
-  //   await el.updateComplete;
+    await el.updateComplete;
 
-  //   const input = el.shadowRoot?.querySelector('input[type="text"]');
-  //   expect(input).to.exist;
-  //   expect((input as HTMLInputElement)?.value).to.equal('Test todo');
-  // });
+    const input = el.shadowRoot?.querySelector('input[type="text"]');
+    expect(input).to.exist;
+    expect((input as HTMLInputElement)?.value).to.equal('Test todo');
+  });
 
-  // it('dispatches updateTodo event when input changes', async () => {
-  //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('dispatches updateTodo event when input changes', async () => {
+    const todo: Todo = { id: '1', text: 'Test todo', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   // Enter edit mode
-  //   const item = el.shadowRoot?.querySelector('.item') as HTMLElement;
-  //   item?.click();
-  //   await el.updateComplete;
+    // Enter edit mode
+    const item = el.shadowRoot?.querySelector('.item') as HTMLElement;
+    item?.click();
+    await el.updateComplete;
 
-  //   // Change input
-  //   const input = el.shadowRoot?.querySelector('input[type="text"]') as HTMLInputElement;
-  //   input.value = 'Updated todo';
-  //   input.dispatchEvent(new Event('change'));
+    // Change input
+    const input = el.shadowRoot?.querySelector('input[type="text"]') as HTMLInputElement;
+    input.value = 'Updated todo';
+    input.dispatchEvent(new Event('change'));
 
-  //   // Wait for event
-  //   await el.updateComplete;
+    // Wait for event
+    await el.updateComplete;
 
-  //   // Check that event was dispatched (we can't easily capture it here, but we can verify the component state)
-  //   expect(input.value).to.equal('Updated todo');
-  // });
+    // Check that event was dispatched (we can't easily capture it here, but we can verify the component state)
+    expect(input.value).to.equal('Updated todo');
+  });
 
-  // it('dispatches removeTodo event when remove button is clicked', async () => {
-  //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('dispatches removeTodo event when remove button is clicked', async () => {
+    const todo: Todo = { id: '1', text: 'Test todo', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   let capturedEvent: CustomEvent | null = null;
-  //   el.addEventListener('removeTodo', (e: Event) => {
-  //     capturedEvent = e as CustomEvent;
-  //   });
+    let capturedEvent: CustomEvent | null = null;
+    el.addEventListener('removeTodo', (e: Event) => {
+      capturedEvent = e as CustomEvent<RemoveTodo>;
+    });
 
-  //   const button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
-  //   button?.click();
+    const button = el.shadowRoot?.querySelector('button') as HTMLButtonElement;
+    button?.click();
 
-  //   await el.updateComplete;
+    await el.updateComplete;
 
-  //   expect(capturedEvent).to.exist;
-  //   expect(capturedEvent?.detail.id).to.equal('1');
-  // });
+    expect(capturedEvent).to.exist;
+    expect(capturedEvent?.detail.id).to.equal('1');
+  });
 
-  // it('dispatches updateTodo event when checkbox is clicked', async () => {
-  //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('dispatches updateTodo event when checkbox is clicked', async () => {
+    const todo: Todo = { id: '1', text: 'Test todo', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   let capturedEvent: CustomEvent | null = null;
-  //   el.addEventListener('updateTodo', (e: Event) => {
-  //     capturedEvent = e as CustomEvent;
-  //   });
+    let capturedEvent: CustomEvent | null = null;
+    el.addEventListener('updateTodo', (e: Event) => {
+      capturedEvent = e as CustomEvent;
+    });
 
-  //   const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
-  //   checkbox?.click();
+    const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    checkbox?.click();
 
-  //   await el.updateComplete;
+    await el.updateComplete;
 
-  //   expect(capturedEvent).to.exist;
-  //   expect(capturedEvent?.detail.done).to.be.true;
-  // });
+    expect(capturedEvent).to.exist;
+    expect(capturedEvent?.detail.done).to.be.true;
+  });
 
-  // it('disables checkbox when text is empty', async () => {
-  //   const todo: Todo = { id: '1', text: '', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('disables checkbox when text is empty', async () => {
+    const todo: Todo = { id: '1', text: '', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
-  //   expect(checkbox?.disabled).to.be.true;
-  // });
+    const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(checkbox?.disabled).to.be.true;
+  });
 
-  // it('enables checkbox when text is not empty', async () => {
-  //   const todo: Todo = { id: '1', text: 'Test todo', done: false };
-  //   const el = await fixture<TodoListItem>(
-  //     html`<todo-listitem .todo=${todo}></todo-listitem>`
-  //   );
-  //   await el.updateComplete;
+  it('enables checkbox when text is not empty', async () => {
+    const todo: Todo = { id: '1', text: 'Test todo', done: false };
+    const el = await fixture<TodoListItem>(
+      html`<todo-listitem .todo=${todo}></todo-listitem>`
+    );
+    await el.updateComplete;
 
-  //   const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
-  //   expect(checkbox?.disabled).to.be.false;
-  // });
+    const checkbox = el.shadowRoot?.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    expect(checkbox?.disabled).to.be.false;
+  });
 });
 
